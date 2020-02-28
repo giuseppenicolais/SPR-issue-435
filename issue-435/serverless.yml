@@ -1,0 +1,40 @@
+service: issue-435
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+      slim: true
+      useStaticCache: true
+      useDownloadCache: true
+      cacheLocation: './._cache'
+      staticCacheMaxVersions: 10
+      dockerizePip: non-linux
+
+provider:
+  name: aws
+  runtime: python3.6
+
+package:
+  individually: true
+  exclude:
+    - ./**
+
+functions:
+  functionA:
+    module: src/function_a
+    handler: function_a.handler
+    package:
+      include:
+        - src/common/**
+        - src/function_a/function_a.py
+  functionB:
+    module: src/function_b
+    handler: function_b.handler
+    package:
+      include:
+        - src/function_b/function_b.py
+        - src/common/**
+
+
